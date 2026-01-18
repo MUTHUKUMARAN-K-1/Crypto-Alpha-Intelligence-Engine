@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered cryptocurrency market regime detection and tradability scoring dashboard">
+    <title>Crypto Regime Intelligence Engine</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" stroke="url(#logoGradient)" stroke-width="2"/>
+                    <path d="M12 20L18 26L28 14" stroke="url(#logoGradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" stop-color="#00F5A0"/>
+                            <stop offset="100%" stop-color="#00D9F5"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="brand-text">Crypto Regime <span class="highlight">AI</span></span>
+        </div>
+        <div class="nav-status">
+            <div class="status-indicator" id="apiStatus">
+                <span class="status-dot"></span>
+                <span class="status-text">Connecting...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">
+                <span class="gradient-text">Market Intelligence</span>
+                <br>Powered by AI
+            </h1>
+            <p class="hero-subtitle">
+                Real-time regime detection and tradability scoring using machine learning
+            </p>
+        </section>
+
+        <!-- Input Section -->
+        <section class="input-section glass-card">
+            <div class="input-group">
+                <label for="assetInput">
+                    <span class="label-icon">📊</span>
+                    Assets to Analyze
+                </label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="assetInput" 
+                        placeholder="e.g., btc, eth, sol"
+                        value="btc,eth,sol"
+                    >
+                    <div class="input-hint">Comma-separated asset symbols</div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="daysInput">
+                    <span class="label-icon">📅</span>
+                    Analysis Period
+                </label>
+                <div class="input-wrapper">
+                    <select id="daysInput">
+                        <option value="7">7 Days</option>
+                        <option value="14">14 Days</option>
+                        <option value="30" selected>30 Days</option>
+                        <option value="90">90 Days</option>
+                    </select>
+                </div>
+            </div>
+            <button class="analyze-btn" id="analyzeBtn" onclick="analyzeMarket()">
+                <span class="btn-text">Analyze Market</span>
+                <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </span>
+            </button>
+        </section>
+
+        <!-- Results Grid -->
+        <div class="results-grid" id="resultsGrid">
+            
+            <!-- 1. Regime Card (Existing but updated) -->
+            <section class="result-card regime-card glass-card" id="regimeCard">
+                <div class="card-header">
+                    <h2>Market Regime</h2>
+                    <div class="card-badge" id="regimeConfidence">--</div>
+                </div>
+                <div class="regime-display">
+                    <div class="regime-indicator" id="regimeIndicator">
+                        <span class="regime-icon">⏳</span>
+                        <span class="regime-text" id="regimeText">Waiting for Analysis</span>
+                    </div>
+                    <div class="regime-probabilities" id="regimeProbabilities">
+                        <div class="prob-item">
+                            <span class="prob-label">TREND</span>
+                            <div class="prob-bar"><div class="prob-fill trend-fill" id="probTrend" style="width: 0%"></div></div>
+                            <span class="prob-value" id="probTrendVal">--%</span>
+                        </div>
+                        <div class="prob-item">
+                            <span class="prob-label">RANGE</span>
+                            <div class="prob-bar"><div class="prob-fill range-fill" id="probRange" style="width: 0%"></div></div>
+                            <span class="prob-value" id="probRangeVal">--%</span>
+                        </div>
+                        <div class="prob-item">
+                            <span class="prob-label">HIGH-RISK</span>
+                            <div class="prob-bar"><div class="prob-fill risk-fill" id="probRisk" style="width: 0%"></div></div>
+                            <span class="prob-value" id="probRiskVal">--%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="explanation-box" id="regimeExplanation">
+                    <p>Enter assets and click "Analyze Market" to see AI-powered market regime detection.</p>
+                </div>
+            </section>
+
+            <!-- 2. AI Position Sizing (New) -->
+            <section class="result-card position-card glass-card" id="positionCard">
+                <div class="card-header">
+                    <h2>🎯 AI Position Sizing</h2>
+                    <div class="card-badge actionable" id="actionBadge">WAIT</div>
+                </div>
+                <div class="position-display">
+                    <div class="multiplier-box">
+                        <span class="mult-label">Recommended Size</span>
+                        <span class="mult-value" id="positionMult">--x</span>
+                    </div>
+                    <div class="risk-params">
+                        <div class="param-item">
+                            <span class="param-label">Stop Loss</span>
+                            <span class="param-value negative" id="stopLoss">--%</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label">Take Profit</span>
+                            <span class="param-value positive" id="takeProfit">--%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rationale-box" id="positionRationale">
+                    <p>AI-optimized position recommendations based on volatility and regime risk.</p>
+                </div>
+            </section>
+
+            <!-- 3. Multi-Timeframe Analysis (New) -->
+            <section class="result-card timeframe-card glass-card" id="timeframeCard">
+                <div class="card-header">
+                    <h2>⏱️ Multi-Timeframe</h2>
+                    <div class="card-badge" id="confluenceScore">--% Confluence</div>
+                </div>
+                <div class="timeframe-grid">
+                    <div class="tf-item">
+                        <span class="tf-label">1W</span>
+                        <span class="tf-val" id="tf1w">--</span>
+                    </div>
+                    <div class="tf-item">
+                        <span class="tf-label">2W</span>
+                        <span class="tf-val" id="tf2w">--</span>
+                    </div>
+                    <div class="tf-item">
+                        <span class="tf-label">1M</span>
+                        <span class="tf-val" id="tf1m">--</span>
+                    </div>
+                    <div class="tf-item">
+                        <span class="tf-label">3M</span>
+                        <span class="tf-val" id="tf3m">--</span>
+                    </div>
+                </div>
+                <div class="tf-summary" id="tfSummary">
+                    Checking trend alignment...
+                </div>
+            </section>
+
+            <!-- 4. Sentiment & Prediction (New - Split layout) -->
+            <section class="result-card sentiment-card glass-card" id="sentimentCard">
+                <div class="card-header">
+                    <h2>🧠 AI Insights</h2>
+                </div>
+                <div class="insights-container">
+                    <!-- CryptoBERT Sentiment -->
+                    <div class="insight-block">
+                        <div class="insight-header">
+                            <span class="insight-icon">🤖</span>
+                            <span>CryptoBERT Sentiment</span>
+                        </div>
+                        <div class="sentiment-meter">
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="sentimentFill" style="width: 50%"></div>
+                            </div>
+                            <span class="meter-val" id="sentimentValue">Neutral</span>
+                        </div>
+                    </div>
+                    
+                    <!-- LSTM Prediction -->
+                    <div class="insight-block">
+                        <div class="insight-header">
+                            <span class="insight-icon">🔮</span>
+                            <span>Next 24h Prediction</span>
+                        </div>
+                        <div class="prediction-box">
+                            <span class="pred-val" id="predictionTarget">--</span>
+                            <span class="pred-prob" id="predictionProb">(--%)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Whale Tracking (New) -->
+            <section class="result-card whale-card glass-card" id="whaleCard">
+                <div class="card-header">
+                    <h2>🐋 Whale Tracking</h2>
+                    <div class="card-badge" id="whaleActivity">--</div>
+                </div>
+                <div class="whale-stats">
+                    <div class="whale-item">
+                        <span class="w-label">Net Flow (24h)</span>
+                        <span class="w-value" id="netFlow">--</span>
+                    </div>
+                    <div class="whale-item">
+                        <span class="w-label">Sentiment</span>
+                        <span class="w-value" id="whaleSentiment">--</span>
+                    </div>
+                </div>
+                <div class="whale-signal" id="whaleSignal">
+                    No significant whale movement detected.
+                </div>
+            </section>
+
+            <!-- 6. Metrics Card (Existing) -->
+            <section class="result-card metrics-card glass-card" id="metricsCard">
+                <div class="card-header">
+                    <h2>Key Metrics</h2>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <div class="metric-icon volatility-icon">📈</div>
+                        <div class="metric-content">
+                            <span class="metric-label">Volatility</span>
+                            <span class="metric-value" id="volatilityValue">--</span>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-icon correlation-icon">🔗</div>
+                        <div class="metric-content">
+                            <span class="metric-label">Correlation</span>
+                            <span class="metric-value" id="correlationValue">--</span>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-icon liquidity-icon">💧</div>
+                        <div class="metric-content">
+                            <span class="metric-label">Liquidity</span>
+                            <span class="metric-value" id="liquidityValue">--</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Market Data (Existing) -->
+            <section class="result-card market-card glass-card" id="marketCard">
+                <div class="card-header">
+                    <h2>Market Data</h2>
+                    <div class="live-badge">🔴 LIVE</div>
+                </div>
+                <div class="market-stats" id="marketStats">
+                    <div class="stat-item">
+                        <span class="stat-label">Current Price</span>
+                        <span class="stat-value" id="currentPrice">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">24h Change</span>
+                        <span class="stat-value" id="priceChange">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">24h Volume</span>
+                        <span class="stat-value" id="volume24h">--</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+            <p class="loading-text" id="loadingText">Analyzing market data...</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Powered by CoinGecko API • Built with Machine Learning</p>
+        <p class="footer-hint">API endpoint: <code id="apiEndpoint">http://localhost:8000</code></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
