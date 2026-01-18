@@ -90,6 +90,103 @@ Without CoinGecko API, this system **would not function**:
 
 ## 🏗️ Architecture
 
+### System Flow Diagram
+
+```mermaid
+flowchart TB
+    subgraph DataSources["📊 Data Sources"]
+        WEEX["WEEX API<br/>Orderbook, Funding, Prices"]
+        CG["CoinGecko API<br/>Historical Data, Market Cap"]
+    end
+
+    subgraph AIModels["🧠 AI/ML Models"]
+        RM["Regime Classifier<br/>Random Forest"]
+        FP["Funding Predictor<br/>Gradient Boosting"]
+        OC["Orderbook CNN<br/>LOB Analysis"]
+        MC["Momentum Cascade<br/>Lead-Lag Detection"]
+    end
+
+    subgraph Intelligence["⚡ Intelligence Layer"]
+        SA["Signal Aggregator<br/>Weighted Ensemble"]
+        SS["Strategy Selector<br/>Regime-Adaptive"]
+        RE["Risk Engine<br/>Position Sizing"]
+    end
+
+    subgraph Execution["🎯 Execution"]
+        TE["Trade Executor"]
+        LLM["LLM Explainer<br/>DeepSeek/Gemma"]
+        AL["AI Log Upload"]
+    end
+
+    WEEX --> AIModels
+    CG --> AIModels
+    AIModels --> SA
+    SA --> SS
+    SS --> RE
+    RE --> TE
+    TE --> LLM
+    LLM --> AL
+    TE --> WEEX
+```
+
+### Decision Flow
+
+```mermaid
+flowchart LR
+    A["Market Data"] --> B{"Regime?"}
+    B -->|TREND| C["Trend Following"]
+    B -->|RANGE| D["Mean Reversion"]
+    B -->|HIGH-RISK| E["Defensive"]
+    
+    C --> F["Signal Aggregation"]
+    D --> F
+    E --> F
+    
+    F --> G{"Score > 0.2?"}
+    G -->|Yes| H["Execute Trade"]
+    G -->|No| I["Hold Position"]
+    
+    H --> J["Generate AI Log"]
+    J --> K["Upload to WEEX"]
+```
+
+### Model Architecture
+
+```mermaid
+graph TD
+    subgraph Input["Input Features"]
+        V["Volatility<br/>ATR, Spikes"]
+        C["Correlation<br/>Cross-Asset"]
+        L["Liquidity<br/>Volume, Depth"]
+        O["Orderbook<br/>Bid/Ask Imbalance"]
+        FR["Funding Rate<br/>History"]
+    end
+
+    subgraph Models["ML Models"]
+        RF["Random Forest<br/>100 Trees"]
+        GB["Gradient Boosting<br/>100 Estimators"]
+    end
+
+    subgraph Output["Outputs"]
+        REG["Regime<br/>TREND/RANGE/RISK"]
+        SIG["Signal<br/>LONG/SHORT/HOLD"]
+        CONF["Confidence<br/>0-100%"]
+    end
+
+    V --> RF
+    C --> RF
+    L --> RF
+    O --> GB
+    FR --> GB
+    
+    RF --> REG
+    GB --> SIG
+    RF --> CONF
+    GB --> CONF
+```
+
+### Directory Structure
+
 ```
 crypto-regime-engine/
 │
