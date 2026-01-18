@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: crypto-alpha-engine
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: WEEX_API_KEY
+        sync: false
+      - key: WEEX_SECRET_KEY
+        sync: false
+      - key: WEEX_PASSPHRASE
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: COINGECKO_API_KEY
+        sync: false
