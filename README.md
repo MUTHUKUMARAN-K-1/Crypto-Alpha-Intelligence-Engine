@@ -16,6 +16,20 @@
   <img src="https://img.shields.io/badge/Trading-WEEX-purple?style=flat-square" alt="WEEX">
 </p>
 
+<p align="center">
+  <a href="public/Crypto_Alpha_Intelligence_Engine.mp4">
+    <img src="https://img.shields.io/badge/🎬_Demo_Video-Watch_Now-red?style=for-the-badge" alt="Demo Video">
+  </a>
+</p>
+
+---
+
+## 🎬 Demo Video
+
+https://github.com/user-attachments/assets/Crypto_Alpha_Intelligence_Engine.mp4
+
+> **Note**: Click the video above or [download the demo video](public/Crypto_Alpha_Intelligence_Engine.mp4) to see the system in action.
+
 ---
 
 ## 🎯 What This Project Does
